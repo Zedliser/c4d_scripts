@@ -787,14 +787,6 @@ class c4d_capture(c4d.plugins.CommandData):
         vecPosition.x = vecPosition.x * self.scale_x * unit
         vecPosition.y = vecPosition.y * self.scale_y * unit
         vecPosition.z = vecPosition.z * self.scale_z * unit
-        
-        #поворот в пространстве вдоль оси OY (направлена вверх)
-        if self.rotation > 0 and self.rotation < 360:
-            rot_rad = self.rotation*math.pi/180
-            x_temp = math.cos(rot_rad)*vecPosition.x - math.sin(rot_rad)*vecPosition.z
-            z_temp = math.sin(rot_rad)*vecPosition.x + math.cos(rot_rad)*vecPosition.z
-            vecPosition.x = x_temp
-            vecPosition.z = z_temp
 
         return vecPosition
 
@@ -994,7 +986,8 @@ class c4d_capture(c4d.plugins.CommandData):
                 OriginLat = self.lat
                 OriginLon = self.lon
                 AltOrigin = 0.0
-                HeaderFormat = '<BBBBBBHHfffff'
+                Rotation = self.rotation
+                HeaderFormat = '<BBBBBBHHffffff'
                 size = struct.calcsize(HeaderFormat)
                 #Write header
                 f.write(struct.pack(HeaderFormat,   Version,
@@ -1009,7 +1002,8 @@ class c4d_capture(c4d.plugins.CommandData):
                                                     TimeEnd,
                                                     OriginLat,
                                                     OriginLon,
-                                                    AltOrigin))
+                                                    AltOrigin,
+                                                    Rotation))
 
                 # Points data starts at offset of 100 bytes
                 for _ in range(size + 4, 100):
