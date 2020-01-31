@@ -50,6 +50,7 @@ function Animation.new()
 		obj.number_positions = NandLua.readNumberPositions()
 		obj.number_colors = NandLua.readNumberColors()
 		obj.origin_lat, obj.origin_lon, obj.origin_alt = NandLua.readPositionOrigin()
+		obj.origin_rotation = NandLua.readChunk(30, 4) -- 30 - offset, 4 - size
 
 	local Config = {}
 
@@ -62,8 +63,9 @@ function Animation.new()
 		Config.lat = cfg.lat or self.origin_lat
 		Config.lon = cfg.lon or self.origin_lon
 		Config.alt = cfg.alt or self.origin_alt
+		Config.rot = cfg.rot or self.origin_rotation
 		if Config.lat ~= nil and Config.lon ~= nil and Config.alt ~= nil then
-			ap.setGpsOrigin(Config.lat, Config.lon, Config.alt)
+			ap.setGpsOrigin(Config.lat, Config.lon, Config.alt, Config.rot)
 		end
 		Config.light_onlanding = cfg.light_onlanding or false
 		Config.edge_marker = cfg.edge_marker or false
